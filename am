@@ -41,7 +41,13 @@ function main()
 		fi
 	fi
 
+	if [ -f ~/_linux//scripts/checkpatch.pl ]; then
+		~/_linux//scripts/checkpatch.pl ${FN}
+	fi
+
 	git am ${FN}
+	echo
+
 	exit 0
 }
 
