@@ -1,0 +1,48 @@
+#!/bin/sh
+
+#   This program is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+
+ID=$1
+FN=""
+DIR_NEW=~/mail/sergey/new
+DIR_CUR=~/mail/sergey/cur
+
+function do_grep()
+{
+	local DIR=$1
+	FN=`grep -R ${ID} ${DIR} | awk 'BEGIN { FS=":" } /1/ {print $1}'`
+	if [ $? -ne 0 ]; then
+		exit 2
+	fi
+}
+
+function main()
+{
+	do_grep ${DIR_NEW}
+
+	if [ "z$FN" == "z" ]; then
+		do_grep ${DIR_CUR}
+
+		if [ "z$FN" == "z" ]; then
+			echo "Can't find ${ID}"
+			exit 1
+		fi
+	fi
+
+	git am ${FN}
+	exit 0
+}
+
+main
