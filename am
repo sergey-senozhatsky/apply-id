@@ -22,7 +22,7 @@ DIR_CUR=~/mail/sergey/cur
 function do_grep()
 {
 	local DIR=$1
-	FN=`grep -R ${ID} ${DIR} | grep "Message-Id" | awk 'BEGIN { FS=":Message-Id" } /1/ {print $1}'`
+	FN=`grep -R --files-with-matches ${ID} ${DIR}`
 	if [ $? -ne 0 ]; then
 		exit 2
 	fi
