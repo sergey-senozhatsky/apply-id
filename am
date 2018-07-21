@@ -22,7 +22,7 @@ DIR_CUR=~/mail/sergey/cur
 function do_grep()
 {
 	local DIR=$1
-	FN=`grep -R --files-with-matches "Message-ID: <${ID}>" ${DIR}`
+	FN=`egrep -R --files-with-matches -e "Message-[IiDd]{2}: <${ID}>" ${DIR}`
 }
 
 function main()
