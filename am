@@ -16,8 +16,8 @@
 
 ID=$1
 FN=""
-DIR_NEW=~/mail/sergey/new
-DIR_CUR=~/mail/sergey/cur
+DIR_NEW=~/mail/new
+DIR_CUR=~/mail/cur
 
 function do_grep()
 {
@@ -38,8 +38,8 @@ function main()
 		fi
 	fi
 
-	if [ -f ~/_linux//scripts/checkpatch.pl ]; then
-		~/_linux//scripts/checkpatch.pl ${FN}
+	if [ -f ~/_linux/scripts/checkpatch.pl ]; then
+		~/_linux/scripts/checkpatch.pl ${FN}
 	fi
 
 	git am ${FN}
