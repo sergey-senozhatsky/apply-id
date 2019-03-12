@@ -16,8 +16,8 @@
 
 ID=$1
 FN=""
-DIR_NEW=~/mail/new
-DIR_CUR=~/mail/cur
+MAIL_DIR=~/mail/
+MAIL_BOX=("mb1" "mb2")
 
 function do_grep()
 {
@@ -27,15 +27,24 @@ function do_grep()
 
 function main()
 {
-	do_grep ${DIR_NEW}
+	for _mb in "${MAIL_BOX[@]}"; do
+		mb="${MAIL_DIR}/${_mb}/new"
+
+		do_grep ${mb}
+		if [ "z$FN" != "z" ]; then
+			break
+		fi
+
+		mb="${MAIL_DIR}/${_mb}/cur"
+		do_grep ${mb}
+		if [ "z$FN" != "z" ]; then
+			break
+		fi
+	done
 
 	if [ "z$FN" == "z" ]; then
-		do_grep ${DIR_CUR}
-
-		if [ "z$FN" == "z" ]; then
-			echo "Can't find ${ID}"
-			exit 1
-		fi
+		echo "Can't find ${ID}"
+		exit 1
 	fi
 
 	if [ -f ~/_linux/scripts/checkpatch.pl ]; then
