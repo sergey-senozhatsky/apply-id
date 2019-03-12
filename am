@@ -27,6 +27,11 @@ function do_grep()
 
 function main()
 {
+	if [ "z${ID}" == "z" ]; then
+		echo "No Message-ID was provided"
+		exit 1
+	fi
+
 	for _mb in "${MAIL_BOX[@]}"; do
 		mb="${MAIL_DIR}/${_mb}/new"
 
