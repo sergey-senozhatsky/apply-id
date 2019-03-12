@@ -1,2 +1,3 @@
-# apply-id
-Lookup mailbox by message-id and git am the patch
+# git-am-message-id
+
+git am Message-ID from a mailbox
