@@ -21,7 +21,9 @@
 # am 00150aae7b781137005e9ebf@kernel.org
 #
 
+KERN_SRC=~/_linux
 ID=$1
+CHECK=$2
 FN=""
 MAIL_DIR=~/mail/
 MAIL_BOX=("mb1" "mb2")
@@ -29,41 +31,46 @@ MAIL_BOX=("mb1" "mb2")
 function do_grep()
 {
 	local DIR=$1
-	FN=`egrep -R --files-with-matches -e "Message-[IiDd]{2}: <${ID}>" ${DIR}`
+	FN=`egrep -R --files-with-matches -e "Message-[IiDd]{2}: <"$ID">" "$DIR"`
 }
 
 function main()
 {
-	if [ "z${ID}" == "z" ]; then
+	if [ "z$ID" == "z" ]; then
 		echo "No Message-ID was provided"
 		exit 1
 	fi
 
 	for _mb in "${MAIL_BOX[@]}"; do
-		mb="${MAIL_DIR}/${_mb}/new"
+		mb="$MAIL_DIR"/"$_mb"/new
 
-		do_grep ${mb}
+		do_grep "$mb"
 		if [ "z$FN" != "z" ]; then
 			break
 		fi
 
-		mb="${MAIL_DIR}/${_mb}/cur"
-		do_grep ${mb}
+		mb="$MAIL_DIR"/"$_mb"/cur
+		do_grep "$mb"
 		if [ "z$FN" != "z" ]; then
 			break
 		fi
 	done
 
 	if [ "z$FN" == "z" ]; then
-		echo "Can't find ${ID}"
+		echo "Can't find $ID"
 		exit 1
 	fi
 
-	if [ -f ~/_linux/scripts/checkpatch.pl ]; then
-		~/_linux/scripts/checkpatch.pl ${FN}
+	if [ -f "$KERN_SRC/scripts/checkpatch.pl" ]; then
+		"$KERN_SRC"/scripts/checkpatch.pl "$FN"
 	fi
 
-	git am ${FN}
+	if [ "z$CHECK" != "z" ]; then
+		echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+		exit 0
+	fi
+
+	git am "$FN"
 	echo
 
 	exit 0
